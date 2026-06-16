@@ -8,30 +8,7 @@ const {
 
 const graphApiVersion = whatsappGraphVersion;
 const accessToken = whatsappAccessToken;
-const defaultPhoneNumberId = whatsappPhoneNumberId;
-let currentPhoneNumberId = defaultPhoneNumberId;
-
-function looksLikeJwt(token) {
-  if (!token) return false;
-  const parts = token.split(".");
-  return parts.length === 3;
-}
-
-console.log(
-  `[whatsappTemplates] loaded graph=${graphApiVersion} token_source=${
-    accessToken ? "env" : "missing"
-  } phone_id_source=${currentPhoneNumberId ? "env" : "missing"}`
-);
-if (!accessToken) {
-  console.warn(
-    "[whatsappTemplates] warning: missing WHATSAPP_ACCESS_TOKEN in .env"
-  );
-}
-if (looksLikeJwt(accessToken)) {
-  console.error(
-    "[whatsappTemplates] token format warning: token looks like JWT and is likely not a Meta Graph access token."
-  );
-}
+let currentPhoneNumberId = whatsappPhoneNumberId;
 
 function getMessagesUrl() {
   if (!currentPhoneNumberId) {
@@ -58,56 +35,8 @@ function procesarNumero(to) {
 function setPhoneNumberId(phoneNumberId) {
   const clean = String(phoneNumberId || "").trim();
   if (!clean) return;
-  if (clean !== currentPhoneNumberId) {
-    console.log(
-      `[whatsappTemplates] phone_number_id updated from ${currentPhoneNumberId || "none"} to ${clean}`
-    );
-  }
   currentPhoneNumberId = clean;
-  validarAccesoPhoneNumber(clean);
 }
-
-async function validarAccesoPhoneNumber(phoneNumberId) {
-  try {
-    const response = await axios.get(`https://graph.facebook.com/${graphApiVersion}/${phoneNumberId}`, {
-      params: { fields: "id,display_phone_number" },
-      headers: getHeaders(),
-      timeout: 10000,
-    });
-    console.log(
-      "[whatsappTemplates] phone access OK:",
-      response.data?.id || "no-id",
-      response.data?.display_phone_number || "no-display-phone"
-    );
-  } catch (error) {
-    const status = error.response?.status;
-    const details = error.response?.data || error.message;
-    console.error(
-      `[whatsappTemplates] phone access FAILED for phone_number_id=${phoneNumberId}:`,
-      status,
-      details
-    );
-  }
-}
-
-async function validarCredencialesMeta() {
-  try {
-    const response = await axios.get(`https://graph.facebook.com/${graphApiVersion}/me`, {
-      headers: getHeaders(),
-      timeout: 10000,
-    });
-    console.log("[whatsappTemplates] token check OK:", response.data?.id || "no-id");
-  } catch (error) {
-    const status = error.response?.status;
-    const details = error.response?.data || error.message;
-    console.error("[whatsappTemplates] token check FAILED:", status, details);
-  }
-  if (currentPhoneNumberId) {
-    await validarAccesoPhoneNumber(currentPhoneNumberId);
-  }
-}
-
-validarCredencialesMeta();
 
 async function enviarPayload(payload) {
   const url = getMessagesUrl();
@@ -116,9 +45,9 @@ async function enviarPayload(payload) {
       headers: getHeaders(),
       timeout: 15000,
     });
-    logExitoso(url, payload, response.data);
+    console.log("Mensaje enviado exitosamente:", response.data);
   } catch (error) {
-    logError(url, payload, error);
+    console.error("Error enviando mensaje:", error.response?.data || error.message);
   }
 }
 
@@ -132,92 +61,53 @@ async function enviarMensajeTexto(to, bodyText) {
   await enviarPayload(payload);
 }
 
-async function enviarPayloadTemplate(to, templateName, components = []) {
-  const payload = {
-    messaging_product: "whatsapp",
-    to: procesarNumero(to),
-    type: "template",
-    template: {
-      name: templateName,
-      language: { code: "es_MX" },
-      components,
-    },
-  };
-  await enviarPayload(payload);
-}
+// ---- PLANTILLAS CITA CIUDADANA ----
 
-async function enviarPlantillaWhatsApp(to) {
-  const texto =
-    "Bienvenido al Asistente Digital del Municipio de Cuautitlan.\n\nPara consultar su adeudo escriba la palabra: predial. Tambien puede ingresar directamente su clave catastral.";
+async function enviarSaludo(to) {
+  const texto = "👋 ¡Hola! Bienvenido a *CitaCiudadana*, tu asistente médico virtual.\n\nPor favor dime qué deseas hacer:\n1️⃣ Escribe *AGENDAR* para programar una nueva cita.\n2️⃣ Escribe *CONSULTAR* seguido de tu correo para ver tus citas (Ej. CONSULTAR juan@email.com).";
   await enviarMensajeTexto(to, texto);
 }
 
-async function enviarPlantillaSolicitarClaveCatastral(to) {
-  const texto =
-    "Perfecto. Para consultar su adeudo predial, por favor envie su clave catastral.";
+async function enviarMenuEspecialidades(to) {
+  const texto = "🏥 *Especialidades Disponibles:*\n\nPor favor, responde con el nombre de la especialidad que necesitas:\n- Medicina General\n- Cardiología\n- Dermatología\n- Pediatría";
   await enviarMensajeTexto(to, texto);
 }
 
-async function enviarPlantillaWhatsApp2(to, templateName, templateParameters = []) {
-  const texto = `Estimado contribuyente, le compartimos la siguiente informacion:\n\n${templateParameters.join("\n")}`;
+async function enviarPedirFecha(to, especialidad) {
+  const texto = `Excelente, has elegido *${especialidad}*.\n\n📅 Por favor, escribe la fecha y hora de tu cita en este formato:\n*CITA AAAA-MM-DD HH:MM AM/PM correo@email.com*\n\n(Ejemplo: CITA 2026-07-01 10:00 AM juan@email.com)`;
   await enviarMensajeTexto(to, texto);
 }
 
-async function enviarPlantillaOrdenPago(to, orden, reference) {
-  const texto = `Orden de Pago Generada (Cuautitlan)\n\nNumero de Orden: ${orden}\n\nPuede descargar su formato en el siguiente enlace:\n${reference}`;
+async function enviarConfirmacionCita(to, especialidad, fecha, hora) {
+  const texto = `✅ *¡Cita Confirmada!*\n\nEspecialidad: ${especialidad}\nFecha: ${fecha}\nHora: ${hora}\n\nGracias por confiar en CitaCiudadana.`;
   await enviarMensajeTexto(to, texto);
 }
 
-async function enviarPlantillaConsultaPredial(to, parameters) {
-  const texto = `Resultado de Consulta Predial\n\nClave Catastral: ${parameters[0]}\nUltimo Periodo Pagado: ${parameters[1]}\nNombre: ${parameters[2]}\nDireccion: ${parameters[3]}\nLocalidad: ${parameters[4]}`;
+async function enviarListaCitas(to, citas) {
+  if (!citas || citas.length === 0) {
+    await enviarMensajeTexto(to, "No tienes citas programadas actualmente. Escribe *AGENDAR* para crear una.");
+    return;
+  }
+  
+  let texto = "📋 *Tus próximas citas:*\n\n";
+  citas.forEach((c, index) => {
+    texto += `${index + 1}. ${c.speciality} - ${c.date} a las ${c.time}\n`;
+  });
+  
   await enviarMensajeTexto(to, texto);
 }
 
-async function enviarPlantillaErrorGenerico(to, errorMessage) {
-  const texto = `Lo sentimos, ocurrio un error en el sistema: ${errorMessage}. Por favor intente mas tarde.`;
+async function enviarErrorGenerico(to, mensaje) {
+  const texto = `❌ Lo sentimos, ocurrió un error: ${mensaje}.\n\nEscribe *HOLA* para volver al menú principal.`;
   await enviarMensajeTexto(to, texto);
-}
-
-async function enviarPlantillaImagenTlaquepaque(to) {
-  const texto = "Calculando su predial para el municipio de Cuautitlan. Por favor espere un momento...";
-  await enviarMensajeTexto(to, texto);
-}
-
-async function enviarPlantillaPago(to, orden, amount, reference) {
-  const texto = `Detalle de Pago\n\nOrden: ${orden}\nMonto: $${amount}\nEnlace de pago: ${reference}`;
-  await enviarMensajeTexto(to, texto);
-}
-
-function logExitoso(url, payload, responseData) {
-  const logMessage = `${new Date().toISOString()} - URL: ${url}\nEnviado: ${JSON.stringify(
-    payload
-  )}\nRespuesta: ${JSON.stringify(responseData)}\n`;
-  fs.appendFileSync("template_log.txt", logMessage);
-  console.log("Mensaje enviado exitosamente:", responseData);
-}
-
-function logError(url, payload, error) {
-  const status = error.response?.status;
-  const errorData = error.response?.data || error.message;
-  const graphCode = error.response?.data?.error?.code;
-  const graphSubcode = error.response?.data?.error?.error_subcode;
-  const logMessage = `${new Date().toISOString()} - URL: ${url}\nError enviando: ${JSON.stringify(
-    payload
-  )}\nStatus: ${status || "n/a"}\nGraphCode: ${graphCode || "n/a"}\nGraphSubcode: ${
-    graphSubcode || "n/a"
-  }\nError: ${JSON.stringify(errorData)}\n`;
-  fs.appendFileSync("template_log.txt", logMessage);
-  console.error("Error enviando mensaje:", errorData);
 }
 
 module.exports = {
   setPhoneNumberId,
-  enviarPlantillaWhatsApp,
-  enviarPlantillaSolicitarClaveCatastral,
-  enviarPlantillaWhatsApp2,
-  enviarPlantillaOrdenPago,
-  enviarPlantillaConsultaPredial,
-  enviarPlantillaErrorGenerico,
-  enviarPlantillaImagenTlaquepaque,
-  enviarPlantillaPago,
+  enviarSaludo,
+  enviarMenuEspecialidades,
+  enviarPedirFecha,
+  enviarConfirmacionCita,
+  enviarListaCitas,
+  enviarErrorGenerico
 };
