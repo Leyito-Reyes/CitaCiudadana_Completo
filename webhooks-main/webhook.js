@@ -5,6 +5,7 @@ const webhookVerification = require("./webhookVerification");
 const messageHandling = require("./messageHandling");
 const axios = require("./httpClient");
 const config = require("./config");
+const database = require("./database");
 
 const frontendDir = path.join(__dirname, "..");
 const publicDir = path.join(__dirname, "public");
@@ -188,6 +189,49 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && url.pathname.startsWith("/pago/")) {
       await handlePago(req, res, decodeURIComponent(url.pathname.replace("/pago/", "")));
+      return;
+    }
+
+    // --- API RUTAS DEL FRONTEND ---
+    if (req.method === "POST" && url.pathname === "/api/register") {
+      const body = await readJsonBody(req);
+      const result = database.handleRegister(body);
+      json(res, result.success ? 200 : 400, result);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/login") {
+      const body = await readJsonBody(req);
+      const result = database.handleLogin(body);
+      json(res, result.success ? 200 : 401, result);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/profile") {
+      const body = await readJsonBody(req);
+      const result = database.handleUpdateProfile(body);
+      json(res, result.success ? 200 : 400, result);
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/appointments") {
+      const email = url.searchParams.get("email");
+      const appointments = database.handleGetAppointments(email);
+      json(res, 200, appointments);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/appointments") {
+      const body = await readJsonBody(req);
+      const result = database.handleCreateAppointment(body);
+      json(res, result.success ? 201 : 400, result);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/analyze-symptoms") {
+      const body = await readJsonBody(req);
+      const result = database.handleAnalyzeSymptoms(body);
+      json(res, 200, result);
       return;
     }
 
