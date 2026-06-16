@@ -1,5 +1,15 @@
 {
   "users": {
+    "prueba@app.com": {
+      "name": "Usuario de Prueba",
+      "email": "prueba@app.com",
+      "password": "1234",
+      "phone": "555-1234567",
+      "age": "28",
+      "curp": "PRUEBA999999XXXXXX",
+      "social": "1234567890",
+      "profileImage": "https://via.placeholder.com/150"
+    },
     "luis": {
       "name": "luis",
       "email": "luis",

@@ -1,3 +1,14 @@
+let currentScreen = 1;
+
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+
 function showScreen(id){
 
     document
@@ -103,7 +114,7 @@ async function goToMenu(){
         return;
     }
 
-    document.getElementById("userGreeting").innerText = "Hola " + user.name;
+    document.getElementById("userNameDisplay").innerText = user.name;
 
     try {
         const response = await fetch(`/api/appointments?email=${encodeURIComponent(user.email)}`);
@@ -156,28 +167,18 @@ async function saveAppointment(){
 
 function updateAppointmentCards(){
     const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-    const next = document.getElementById("nextAppointment");
-    const history = document.getElementById("historyList");
+    const nextDate = document.getElementById("nextDateMenu");
+    const nextDesc = document.getElementById("nextAppointmentMenu");
 
-    history.innerHTML = "";
+    if (!nextDate || !nextDesc) return;
 
     if (appointments.length === 0) {
-        next.innerText = "Sin citas";
+        nextDesc.innerText = "Sin citas agendadas";
         return;
     }
 
-    next.innerHTML =
-        appointments[0].date +
-        "<br>" +
-        appointments[0].time +
-        "<br>" +
-        appointments[0].speciality;
-
-    appointments.forEach(item => {
-        const li = document.createElement("li");
-        li.innerText = item.date + " " + item.time + " - " + item.speciality;
-        history.appendChild(li);
-    });
+    nextDate.innerText = appointments[0].date;
+    nextDesc.innerText = appointments[0].speciality;
 }
 
 function loadProfile(){

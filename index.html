@@ -10,48 +10,22 @@
 <body>
 <div class="app-container">
     
-    <!-- INTRODUCCION 1 -->
-    <section id="screen1" class="screen active">
-        <h2 style="text-transform:none;">CitaCiudadana</h2>
-        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
-        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 2% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
-        <h3 style="color:#508ca4; text-transform:uppercase;">TU SEGURIDAD TAMBIÉN NOS IMPORTA</h3>
-        <div class="paginator">
-            <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-        </div>
-        <div class="bottom-controls" style="justify-content:flex-end;">
-            <button class="next-btn" onclick="showScreen(2)">NEXT</button>
-        </div>
+    <!-- INTRODUCCIÓN 1 (Mujer) -->
+    <section id="screen1" class="screen active" style="padding:0; position:relative; overflow:hidden;">
+        <div style="width:100%; height:100%; background-image:url('images/intro1_full.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#fff;"></div>
+        <button onclick="showScreen(2)" style="position:absolute; bottom:0; right:0; width:50%; height:20%; background:transparent; border:none; cursor:pointer; z-index:10;"></button>
     </section>
 
-    <!-- INTRODUCCION 2 -->
-    <section id="screen2" class="screen">
-        <h2 style="text-transform:none;">CitaCiudadana</h2>
-        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
-        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 50% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
-        <h3 style="color:#508ca4; text-transform:uppercase;">UNA SOLUCIÓN INTELIGENTE PARA TU SALUD</h3>
-        <p style="font-size:10px; margin-top:10px;">Olvídate de filas interminables...</p>
-        <div class="paginator">
-            <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
-        </div>
-        <div class="bottom-controls" style="justify-content:flex-end;">
-            <button class="next-btn" onclick="showScreen(3)">NEXT</button>
-        </div>
+    <!-- INTRODUCCIÓN 2 (Familia) -->
+    <section id="screen2" class="screen" style="padding:0; position:relative; overflow:hidden;">
+        <div style="width:100%; height:100%; background-image:url('images/intro2_full.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#fff;"></div>
+        <button onclick="showScreen(3)" style="position:absolute; bottom:0; right:0; width:50%; height:20%; background:transparent; border:none; cursor:pointer; z-index:10;"></button>
     </section>
 
-    <!-- INTRODUCCION 3 -->
-    <section id="screen3" class="screen">
-        <h2 style="text-transform:none;">CitaCiudadana</h2>
-        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
-        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 98% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
-        <h3 style="color:#508ca4; text-transform:uppercase;">AGENDA UNA CITA AHORA !</h3>
-        <h3 style="color:#508ca4; text-transform:uppercase; font-size:12px;">ESTAS LIST@ PARA AGENDAR TU CITA?</h3>
-        <div class="paginator">
-            <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
-        </div>
-        <div class="bottom-controls" style="justify-content:flex-end;">
-            <button class="next-btn" onclick="showScreen(4)">NEXT</button>
-        </div>
+    <!-- INTRODUCCIÓN 3 (Doctor) -->
+    <section id="screen3" class="screen" style="padding:0; position:relative; overflow:hidden;">
+        <div style="width:100%; height:100%; background-image:url('images/intro3_full.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#fff;"></div>
+        <button onclick="showScreen(4)" style="position:absolute; bottom:0; right:0; width:50%; height:20%; background:transparent; border:none; cursor:pointer; z-index:10;"></button>
     </section>
 
     <!-- INICIO -->
@@ -74,13 +48,25 @@
         
         <input type="text" id="registerName" class="input-pill" placeholder="Ingresa tu nombre">
         <input type="email" id="registerEmail" class="input-pill" placeholder="Ingresa tu email">
-        <input type="password" id="registerPassword" class="input-pill" placeholder="Ingresa tu contraseña">
         
-        <div class="checkbox-group" style="margin-top:15px;">
-            <input type="checkbox" id="terms"><label>Acepto <u style="color:#508ca4">términos y condiciones</u></label>
+        <div class="password-wrapper">
+            <input type="password" id="registerPassword" class="input-pill" placeholder="Ingresa tu contraseña">
+            <span class="toggle-password" onclick="togglePassword('registerPassword')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
         </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="privacy"><label>Acepto <u style="color:#508ca4">políticas de privacidad</u></label>
+        
+        <div style="display:flex; flex-direction:column; align-items:flex-start; margin: 0 auto; width:fit-content;">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="terms">
+                <span class="checkmark"></span>
+                <span>Acepto <span class="link-text">terminos y condiciones</span></span>
+            </label>
+            <label class="custom-checkbox">
+                <input type="checkbox" id="privacy">
+                <span class="checkmark"></span>
+                <span>Acepto <span class="link-text">politicas de privacidad</span></span>
+            </label>
         </div>
 
         <button class="main-btn" onclick="registerUser()" style="margin-top:20px;">Entrar</button>
@@ -96,8 +82,14 @@
         <p style="font-size:10px; font-weight:bold; color:#777;">INGRESA EN TU CUENTA Y AGENDA UNA CITA CON NOSOTROS</p>
         <p id="loginError" class="error-text"></p>
         
-        <input type="email" id="loginEmail" class="input-pill" placeholder="Ingresa tu email">
-        <input type="password" id="loginPassword" class="input-pill" placeholder="Ingresa tu contraseña">
+        <input type="email" id="loginEmail" class="input-pill" placeholder="Ingresa tu email" value="prueba@app.com">
+        
+        <div class="password-wrapper">
+            <input type="password" id="loginPassword" class="input-pill" placeholder="Ingresa tu contraseña" value="1234">
+            <span class="toggle-password" onclick="togglePassword('loginPassword')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
+        </div>
         
         <button class="main-btn" onclick="loginUser()" style="margin-top:30px;">Entrar</button>
         
