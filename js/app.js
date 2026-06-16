@@ -22,9 +22,20 @@ async function registerUser(){
     const name = document.getElementById("registerName").value.trim();
     const email = document.getElementById("registerEmail").value.trim();
     const password = document.getElementById("registerPassword").value;
+    const errorEl = document.getElementById("registerError");
+    
+    errorEl.classList.remove("show");
 
     if (!name || !email || !password) {
-        showToast("Todos los campos son requeridos");
+        errorEl.innerText = "Todos los campos son requeridos.";
+        errorEl.classList.add("show");
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        errorEl.innerText = "Por favor ingresa un correo válido.";
+        errorEl.classList.add("show");
         return;
     }
 
@@ -40,20 +51,26 @@ async function registerUser(){
             localStorage.setItem("citaciudadanaUser", JSON.stringify({ name, email }));
             showScreen(7);
         } else {
-            showToast(result.message || "Error al registrar usuario");
+            errorEl.innerText = result.message || "El correo ya está registrado.";
+            errorEl.classList.add("show");
         }
     } catch (error) {
         console.error("Error al registrar:", error);
-        showToast("Error de conexión con el servidor");
+        errorEl.innerText = "Error de conexión con el servidor.";
+        errorEl.classList.add("show");
     }
 }
 
 async function loginUser(){
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
+    const errorEl = document.getElementById("loginError");
+    
+    errorEl.classList.remove("show");
 
     if (!email || !password) {
-        showToast("Correo y contraseña son requeridos");
+        errorEl.innerText = "Correo y contraseña son requeridos.";
+        errorEl.classList.add("show");
         return;
     }
 
@@ -69,11 +86,13 @@ async function loginUser(){
             localStorage.setItem("citaciudadanaUser", JSON.stringify(result.user));
             goToMenu();
         } else {
-            showToast(result.message || "Credenciales incorrectas");
+            errorEl.innerText = result.message || "Credenciales incorrectas.";
+            errorEl.classList.add("show");
         }
     } catch (error) {
         console.error("Error al iniciar sesión:", error);
-        showToast("Error de conexión con el servidor");
+        errorEl.innerText = "Error de conexión con el servidor.";
+        errorEl.classList.add("show");
     }
 }
 
@@ -165,8 +184,12 @@ function loadProfile(){
     const user = JSON.parse(localStorage.getItem("citaciudadanaUser"));
     if (!user) return;
 
-    document.getElementById("profileName").innerText = user.name;
-    document.getElementById("profileEmail").innerText = user.email;
+    document.getElementById("editName").value = user.name || "";
+    document.getElementById("editEmail").value = user.email || "";
+    document.getElementById("editPhone").value = user.phone || "";
+    document.getElementById("editAge").value = user.age || "";
+    document.getElementById("editCurp").value = user.curp || "";
+    document.getElementById("editSocial").value = user.social || "";
 
     if (user.profileImage) {
         document.getElementById("profileImage").src = user.profileImage;
@@ -175,40 +198,28 @@ function loadProfile(){
     showScreen(9);
 }
 
-function loadProfileEditor(){
-    const user = JSON.parse(localStorage.getItem("citaciudadanaUser"));
-    if (!user) return;
-
-    document.getElementById("editName").value = user.name || "";
-    document.getElementById("editEmail").value = user.email || "";
-    document.getElementById("editPhone").value = user.phone || "";
-    document.getElementById("editAddress").value = user.address || "";
-
-    showScreen(10);
-}
-
 async function saveProfile(){
     const user = JSON.parse(localStorage.getItem("citaciudadanaUser"));
     if (!user) return;
 
     const name = document.getElementById("editName").value.trim();
-    const email = document.getElementById("editEmail").value.trim();
     const phone = document.getElementById("editPhone").value.trim();
-    const address = document.getElementById("editAddress").value.trim();
+    const age = document.getElementById("editAge").value.trim();
+    const curp = document.getElementById("editCurp").value.trim();
+    const social = document.getElementById("editSocial").value.trim();
     const profileImage = document.getElementById("profileImage").src;
 
     try {
         const response = await fetch("/api/profile", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: user.email, name, phone, address, profileImage })
+            body: JSON.stringify({ email: user.email, name, phone, age, curp, social, profileImage })
         });
         const result = await response.json();
 
         if (result.success) {
             localStorage.setItem("citaciudadanaUser", JSON.stringify(result.user));
             showToast("Perfil actualizado");
-            loadProfile();
         } else {
             showToast(result.message || "Error al actualizar perfil");
         }
@@ -383,4 +394,33 @@ window.onload=()=>{
         );
 
     },2000);
+}
+
+async function iniciarConGoogle() {
+    showToast("Autenticando con Google...");
+    
+    // Aquí se integraría la respuesta real de la SDK de Google.
+    // Por ahora enviamos datos simulados a la nueva API.
+    try {
+        const response = await fetch("/api/google-login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                email: "demo.google@gmail.com", 
+                name: "Usuario Google",
+                googleId: "1234567890" 
+            })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            localStorage.setItem("citaciudadanaUser", JSON.stringify(result.user));
+            goToMenu();
+        } else {
+            showToast("Error en autenticación de Google");
+        }
+    } catch (error) {
+        console.error("Error Google Login:", error);
+        showToast("Error de conexión");
+    }
 }

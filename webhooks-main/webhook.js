@@ -207,6 +207,13 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "POST" && url.pathname === "/api/google-login") {
+      const body = await readJsonBody(req);
+      const result = database.handleGoogleLogin(body);
+      json(res, result.success ? 200 : 401, result);
+      return;
+    }
+
     if (req.method === "POST" && url.pathname === "/api/profile") {
       const body = await readJsonBody(req);
       const result = database.handleUpdateProfile(body);

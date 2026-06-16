@@ -1,0 +1,38 @@
+{
+  "users": {
+    "luis": {
+      "name": "luis",
+      "email": "luis",
+      "password": "luis",
+      "phone": "",
+      "address": "",
+      "profileImage": "https://via.placeholder.com/150"
+    },
+    "luis@luis.com": {
+      "name": "luis",
+      "email": "luis@luis.com",
+      "password": "luis",
+      "phone": "",
+      "address": "",
+      "profileImage": "https://via.placeholder.com/150"
+    },
+    "demo.google@gmail.com": {
+      "name": "Usuario Google",
+      "email": "demo.google@gmail.com",
+      "password": "",
+      "phone": "",
+      "address": "",
+      "profileImage": "https://via.placeholder.com/150",
+      "googleId": "1234567890"
+    }
+  },
+  "appointments": [
+    {
+      "email": "luis",
+      "speciality": "Cardiología",
+      "date": "2006-02-10",
+      "time": "09:00 AM",
+      "createdAt": "2026-06-16T21:54:14.123Z"
+    }
+  ]
+}

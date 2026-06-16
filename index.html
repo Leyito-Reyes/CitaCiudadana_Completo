@@ -1,370 +1,362 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>CitaCiudadana</title>
-
     <link rel="stylesheet" href="css/style.css">
-
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-
 <body>
+<div class="app-container">
+    
+    <!-- INTRODUCCION 1 -->
+    <section id="screen1" class="screen active">
+        <h2 style="text-transform:none;">CitaCiudadana</h2>
+        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
+        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 2% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
+        <h3 style="color:#508ca4; text-transform:uppercase;">TU SEGURIDAD TAMBIÉN NOS IMPORTA</h3>
+        <div class="paginator">
+            <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="bottom-controls" style="justify-content:flex-end;">
+            <button class="next-btn" onclick="showScreen(2)">NEXT</button>
+        </div>
+    </section>
 
-    <!-- Splash -->
+    <!-- INTRODUCCION 2 -->
+    <section id="screen2" class="screen">
+        <h2 style="text-transform:none;">CitaCiudadana</h2>
+        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
+        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 50% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
+        <h3 style="color:#508ca4; text-transform:uppercase;">UNA SOLUCIÓN INTELIGENTE PARA TU SALUD</h3>
+        <p style="font-size:10px; margin-top:10px;">Olvídate de filas interminables...</p>
+        <div class="paginator">
+            <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+        </div>
+        <div class="bottom-controls" style="justify-content:flex-end;">
+            <button class="next-btn" onclick="showScreen(3)">NEXT</button>
+        </div>
+    </section>
 
-    <div id="splashScreen">
+    <!-- INTRODUCCION 3 -->
+    <section id="screen3" class="screen">
+        <h2 style="text-transform:none;">CitaCiudadana</h2>
+        <p style="margin-top:-10px;">Tu trámite, sin filas.</p>
+        <div style="width:220px; height:240px; background-image: url('images/sprite_intro.png'); background-size: 330% auto; background-position: 98% 75%; margin:20px 0; mix-blend-mode: multiply;"></div>
+        <h3 style="color:#508ca4; text-transform:uppercase;">AGENDA UNA CITA AHORA !</h3>
+        <h3 style="color:#508ca4; text-transform:uppercase; font-size:12px;">ESTAS LIST@ PARA AGENDAR TU CITA?</h3>
+        <div class="paginator">
+            <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+        </div>
+        <div class="bottom-controls" style="justify-content:flex-end;">
+            <button class="next-btn" onclick="showScreen(4)">NEXT</button>
+        </div>
+    </section>
 
-        <div class="splash-logo">
-            ❤️
+    <!-- INICIO -->
+    <section id="screen4" class="screen">
+        <img src="images/heart.png" style="width:160px; height:160px; object-fit:contain; margin-bottom:10px; mix-blend-mode: multiply;">
+        <h1 style="color:#326789;">Bienvenido</h1>
+        <button class="main-btn" onclick="showScreen(5)">REGISTRATE</button>
+        <button class="main-btn" onclick="showScreen(6)">INGRESA</button>
+        <div style="font-size:12px; color:#888; margin:15px 0;">o</div>
+        <button class="google-btn" onclick="iniciarConGoogle()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"> CONTINUAR CON GOOGLE
+        </button>
+    </section>
+
+    <!-- CREAR CUENTA NUEVA -->
+    <section id="screen5" class="screen">
+        <h2>CREAR CUENTA NUEVA</h2>
+        <p style="font-size:10px; font-weight:bold; color:#777;">UNETE A NOSOTROS Y NO TE PIERDAS DE LOS BENEFICIOS</p>
+        <p id="registerError" class="error-text"></p>
+        
+        <input type="text" id="registerName" class="input-pill" placeholder="Ingresa tu nombre">
+        <input type="email" id="registerEmail" class="input-pill" placeholder="Ingresa tu email">
+        <input type="password" id="registerPassword" class="input-pill" placeholder="Ingresa tu contraseña">
+        
+        <div class="checkbox-group" style="margin-top:15px;">
+            <input type="checkbox" id="terms"><label>Acepto <u style="color:#508ca4">términos y condiciones</u></label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="privacy"><label>Acepto <u style="color:#508ca4">políticas de privacidad</u></label>
         </div>
 
-        <h1>CitaCiudadana</h1>
-
-    </div>
-
-    <!-- Menú lateral -->
-
-    <div id="sideMenu" class="side-menu">
-
-        <h2>CitaCiudadana</h2>
-
-        <button onclick="showScreen(8)">
-            Inicio
-        </button>
-
-        <button onclick="loadProfile()">
-            Perfil
-        </button>
-
-        <button onclick="showScreen(11)">
-            Agendar Cita
-        </button>
-
-        <button onclick="showScreen(12)">
-            IA Médica
-        </button>
-
-        <button onclick="toggleTheme()">
-            🌙 Tema Oscuro
-        </button>
-
-    </div>
-
-    <!-- SCREEN 1 -->
-
-    <section id="screen1" class="screen active">
-
-        <h1>CitaCiudadana</h1>
-
-        <h2>Tu trámite sin filas</h2>
-
-        <button class="main-btn" onclick="showScreen(2)">
-            Siguiente
-        </button>
-
+        <button class="main-btn" onclick="registerUser()" style="margin-top:20px;">Entrar</button>
+        
+        <div class="bottom-controls">
+            <button class="back-btn" onclick="showScreen(4)">BACK</button>
+        </div>
     </section>
 
-    <!-- SCREEN 2 -->
-
-    <section id="screen2" class="screen">
-
-        <h2>Una solución inteligente para tu salud</h2>
-
-        <button class="main-btn" onclick="showScreen(3)">
-            Siguiente
-        </button>
-
-    </section>
-
-    <!-- SCREEN 3 -->
-
-    <section id="screen3" class="screen">
-
-        <h2>Tu seguridad también nos importa</h2>
-
-        <button class="main-btn" onclick="showScreen(4)">
-            Continuar
-        </button>
-
-    </section>
-
-    <!-- BIENVENIDA -->
-
-    <section id="screen4" class="screen">
-
-        <h1>Bienvenido</h1>
-
-        <button class="main-btn" onclick="showScreen(5)">
-            Registrarse
-        </button>
-
-        <button class="main-btn" onclick="showScreen(6)">
-            Ingresar
-        </button>
-
-    </section>
-
-    <!-- REGISTRO -->
-
-    <section id="screen5" class="screen">
-
-        <h2>Crear Cuenta</h2>
-
-        <input
-            type="text"
-            id="registerName"
-            placeholder="Nombre">
-
-        <input
-            type="email"
-            id="registerEmail"
-            placeholder="Correo">
-
-        <input
-            type="password"
-            id="registerPassword"
-            placeholder="Contraseña">
-
-        <button class="main-btn"
-            onclick="registerUser()">
-
-            Crear Cuenta
-
-        </button>
-
-    </section>
-
-    <!-- LOGIN -->
-
+    <!-- INGRESAR -->
     <section id="screen6" class="screen">
-
-        <h2>Ingresar</h2>
-
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Correo">
-
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Contraseña">
-
-        <button class="main-btn"
-            onclick="loginUser()">
-
-            Entrar
-
-        </button>
-
+        <h2>INGRESAR</h2>
+        <p style="font-size:10px; font-weight:bold; color:#777;">INGRESA EN TU CUENTA Y AGENDA UNA CITA CON NOSOTROS</p>
+        <p id="loginError" class="error-text"></p>
+        
+        <input type="email" id="loginEmail" class="input-pill" placeholder="Ingresa tu email">
+        <input type="password" id="loginPassword" class="input-pill" placeholder="Ingresa tu contraseña">
+        
+        <button class="main-btn" onclick="loginUser()" style="margin-top:30px;">Entrar</button>
+        
+        <div class="bottom-controls">
+            <button class="back-btn" onclick="showScreen(4)">BACK</button>
+        </div>
     </section>
 
     <!-- CUENTA CREADA -->
-
     <section id="screen7" class="screen">
-
-        <h1>Cuenta creada correctamente</h1>
-
-        <button class="main-btn"
-            onclick="goToMenu()">
-
-            Continuar
-
-        </button>
-
+        <div style="font-size:120px; color:#508ca4; margin-bottom:20px;">👍</div>
+        <h2>Bienvenido</h2>
+        <p style="font-weight:bold; font-size:14px; color:#555;">Su cuenta fue creada<br>correctamente</p>
+        <button class="main-btn" onclick="goToMenu()" style="margin-top:20px;">Continuar</button>
+        
+        <div class="bottom-controls">
+            <button class="back-btn" onclick="showScreen(4)">BACK</button>
+        </div>
     </section>
 
-    <!-- MENÚ PRINCIPAL -->
-
-    <section id="screen8" class="screen">
-
+    <!-- MENU PRINCIPAL -->
+    <section id="screen8" class="screen" style="padding:0;">
         <header class="top-bar">
-
-            <button onclick="toggleMenu()">
-                ☰
-            </button>
-
+            <button class="icon-btn">☰</button>
             <h2>CitaCiudadana</h2>
-
-            <div>👤</div>
-
+            <div class="profile-icon-top">👤</div>
         </header>
 
-        <div class="welcome-card">
+        <div class="content-area">
+            <div class="user-greeting">Hola <span id="userNameDisplay">@Nombre</span></div>
+            
+            <div class="header-actions">
+                <div class="card-agendar" onclick="showScreen(11)">
+                    <div>
+                        <h3>AGENDAR NUEVA</h3>
+                        <h3>CITA</h3>
+                    </div>
+                    <div style="font-size:35px; position:relative;">
+                        📅<span style="position:absolute; bottom:0; right:-5px; font-size:14px; background:white; color:#508ca4; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-weight:bold;">✓</span>
+                    </div>
+                </div>
+                <div class="card-mis-citas" onclick="showScreen(13)">
+                    <div style="font-size:24px;">📋</div>
+                    MIS CITAS
+                </div>
+            </div>
 
-            <h2 id="userGreeting">
-                Hola Usuario
-            </h2>
+            <div class="appointment-card">
+                <div class="top-row"><span>PROXIMA CITA</span> <span style="font-weight:normal; font-size:10px;" id="nextDateMenu">10 / 10 / 2025</span></div>
+                <div class="time">11:30 - 12:30 AM</div>
+                <div class="pill-label" id="nextAppointmentMenu">REVISION MEDICA</div>
+            </div>
 
+            <div class="appointment-card">
+                <div class="top-row"><span>CITAS FUTURAS</span> <span style="font-weight:normal; font-size:10px;">20 / 11 / 2026</span></div>
+                <div class="time">11:30 - 12:30 AM</div>
+                <div class="pill-label">REALIZACION DE ESTUDIOS</div>
+            </div>
+            
+            <button class="emergencia-btn" onclick="showScreen(12)">
+                TIENES UNA EMERGENCIAS <span style="font-size:24px;">🚑</span>
+            </button>
         </div>
 
-        <button
-            class="appointment-btn"
-            onclick="showScreen(11)">
-
-            AGENDAR NUEVA CITA
-
-        </button>
-
-        <button
-            class="appointment-btn"
-            onclick="showScreen(12)">
-
-            CONSULTAR CON IA
-
-        </button>
-
-        <div class="card">
-
-            <h3>Próxima cita</h3>
-
-            <p id="nextAppointment">
-                Sin citas
-            </p>
-
-        </div>
-
-        <div class="card">
-
-            <h3>Historial</h3>
-
-            <ul id="historyList"></ul>
-
-        </div>
-
+        <nav class="bottom-nav">
+            <button class="active" onclick="showScreen(8)">🏠</button>
+            <button onclick="showScreen(13)">📅</button>
+            <button onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button onclick="loadProfile()">👤</button>
+        </nav>
     </section>
 
     <!-- PERFIL -->
+    <section id="screen9" class="screen" style="padding:0;">
+        <header class="top-bar">
+            <button class="icon-btn">☰</button>
+            <h2>CitaCiudadana</h2>
+            <div class="profile-icon-top">👤</div>
+        </header>
 
-    <section id="screen9" class="screen">
+        <div class="content-area" style="padding:70px 30px 80px;">
+            <h2 style="font-size:20px; letter-spacing:2px; font-weight:normal;">PERFIL</h2>
+            <div class="avatar-box">📷</div>
+            <input type="file" id="imageInput" onchange="changePhoto(event)" style="display:none;">
+            
+            <div class="profile-form">
+                <div class="profile-row"><label>NOMBRE :</label><input type="text" id="editName"></div>
+                <div class="profile-row"><label>EDAD :</label><input type="text" id="editAge"></div>
+                <div class="profile-row"><label>CORREO :</label><input type="email" id="editEmail" disabled></div>
+                <div class="profile-row"><label>NUMERO TELEFONICO:</label><input type="text" id="editPhone"></div>
+                <div class="profile-row"><label>CURP :</label><input type="text" id="editCurp"></div>
+                <div class="profile-row"><label>NO. SEGUROSOCIAL:</label><input type="text" id="editSocial"></div>
+            </div>
 
-        <h2>Perfil</h2>
-
-        <div class="avatar">
-
-            <img
-                id="profileImage"
-                src="https://via.placeholder.com/150">
-
+            <button class="main-btn" onclick="saveProfile()" style="background:#508ca4; width:180px; padding:10px; font-size:10px; margin-top:20px; border-radius:50px;">ACTUALIZA TUS DATOS</button>
         </div>
 
-        <input
-            type="file"
-            id="imageInput"
-            onchange="changePhoto(event)">
-
-        <h3 id="profileName">
-            Usuario
-        </h3>
-
-        <p id="profileEmail"></p>
-
-        <button
-            class="main-btn"
-            onclick="loadProfileEditor()">
-
-            Editar Perfil
-
-        </button>
-
+        <nav class="bottom-nav">
+            <button onclick="showScreen(8)">🏠</button>
+            <button onclick="showScreen(13)">📅</button>
+            <button onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button class="active" onclick="loadProfile()">👤</button>
+        </nav>
     </section>
 
-    <!-- EDITAR PERFIL -->
+    <!-- BUSCADOR -->
+    <section id="screen10" class="screen" style="padding:0;">
+        <header class="top-bar">
+            <button class="icon-btn">☰</button>
+            <h2>CitaCiudadana</h2>
+            <div class="profile-icon-top">👤</div>
+        </header>
 
-    <section id="screen10" class="screen">
+        <div class="content-area" style="padding:70px 20px 80px;">
+            <h3 style="text-align:left; width:100%;">Consultorios cerca de tu hogar</h3>
+            <div class="map-box">🗺️ Mapa Integrado</div>
 
-        <h2>Editar Perfil</h2>
+            <div class="search-input">
+                🔍 <input type="text" placeholder="Necesitas algun Especialista?.. (Especialidad, Nombre)">
+            </div>
 
-        <input id="editName" placeholder="Nombre">
+            <div style="width:100%; text-align:left;">
+                <h3 style="font-size:10px; text-transform:uppercase; color:#777; margin-bottom:10px;">SUGERENCIAS DE ESPECIALISTAS</h3>
+                
+                <div class="doctor-card">
+                    <div class="doctor-avatar" style="background:#e9ecef;">🧑‍⚕️</div>
+                    <div class="doctor-info"><strong>Jose Ibarra</strong> <span>Psiquiatra</span></div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-avatar" style="background:#e9ecef;">👨‍⚕️</div>
+                    <div class="doctor-info"><strong>Somreis Muncho</strong> <span>Cirujano Estetico</span></div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-avatar" style="background:#e9ecef;">👩‍⚕️</div>
+                    <div class="doctor-info"><strong>Alma Maria Silva</strong> <span>Pediatra</span></div>
+                </div>
+            </div>
+        </div>
 
-        <input id="editEmail" placeholder="Correo">
-
-        <input id="editPhone" placeholder="Teléfono">
-
-        <input id="editAddress" placeholder="Dirección">
-
-        <button
-            class="main-btn"
-            onclick="saveProfile()">
-
-            Guardar
-
-        </button>
-
+        <nav class="bottom-nav">
+            <button onclick="showScreen(8)">🏠</button>
+            <button onclick="showScreen(13)">📅</button>
+            <button class="active" onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button onclick="loadProfile()">👤</button>
+        </nav>
     </section>
 
     <!-- AGENDAR -->
+    <section id="screen11" class="screen" style="padding:0;">
+        <header class="top-bar">
+            <button class="icon-btn" onclick="showScreen(8)">☰</button>
+            <h2>CitaCiudadana</h2>
+            <div class="profile-icon-top">👤</div>
+        </header>
 
-    <section id="screen11" class="screen">
+        <div class="content-area" style="padding:70px 20px 80px;">
+            <h2 style="font-size:20px; font-weight:normal;">AGENDAR</h2>
+            
+            <h3 style="text-align:left; width:100%;">SINTOMAS</h3>
+            <textarea class="textarea-pill" placeholder="Escribe brevemente el malestar..."></textarea>
 
-        <h2>Agendar Cita</h2>
+            <div class="sugerencia-box">
+                <span style="font-size:24px; color:#508ca4;">💡</span>
+                <div>
+                    <strong>Sugerencias</strong><br>
+                    <span style="font-size:9px;">Te daremos una sugerencia de a que experto puedes acudir si es necesario.</span>
+                </div>
+            </div>
 
-        <select id="speciality">
+            <h3 style="text-align:left; width:100%; margin-top:15px; font-size:10px;">ESCOGE EL DIA DE ASISTENCIA</h3>
+            <div class="calendar-widget">
+                <p style="text-align:center; font-weight:bold; color:#777;">OCTOBER 2025</p>
+                <div style="font-size:24px; text-align:center; margin-top:20px; color:#ccc;">(Calendario Interactivo)</div>
+            </div>
 
-            <option>Medicina General</option>
-            <option>Cardiología</option>
-            <option>Dermatología</option>
-            <option>Pediatría</option>
-
-        </select>
-
-        <input
-            type="date"
-            id="appointmentDate">
-
-        <select id="appointmentTime">
-
-            <option>09:00 AM</option>
-            <option>10:00 AM</option>
-            <option>11:00 AM</option>
-
-        </select>
-
-        <button
-            class="main-btn"
-            onclick="saveAppointment()">
-
-            Confirmar Cita
-
-        </button>
-
-    </section>
-
-    <!-- IA -->
-
-    <section id="screen12" class="screen">
-
-        <h2>Asistente IA</h2>
-
-        <div id="chatContainer"
-             class="chat-container">
-
+            <button class="main-btn" onclick="saveAppointment()" style="width:140px; margin-left:auto; display:block; padding:10px; font-size:12px; margin-top:20px;">AGENDAR</button>
         </div>
 
-        <div class="chat-input-container">
-
-            <input
-                type="text"
-                id="symptomInput"
-                placeholder="Describe tus síntomas">
-
-            <button
-                onclick="analyzeSymptoms()">
-
-                Enviar
-
-            </button>
-
-        </div>
-
+        <nav class="bottom-nav">
+            <button onclick="showScreen(8)">🏠</button>
+            <button onclick="showScreen(13)">📅</button>
+            <button onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button class="active" onclick="loadProfile()">👤</button>
+        </nav>
     </section>
 
-    <div id="toast"></div>
+    <!-- IA MEDICA (Chat emergencias) -->
+    <section id="screen12" class="screen" style="padding:0;">
+        <header class="top-bar">
+            <button class="icon-btn" onclick="showScreen(8)">⬅</button>
+            <h2>IA Emergencia</h2>
+            <div class="profile-icon-top">🚑</div>
+        </header>
 
-    <script src="js/app.js"></script>
+        <div class="content-area" style="padding:70px 20px 80px;">
+            <div id="chatContainer" style="width:100%; height:400px; background:#f9f9f9; border-radius:15px; padding:15px; overflow-y:auto; border:1px solid #ddd; margin-bottom:10px;"></div>
+            <div style="display:flex; width:100%; gap:10px;">
+                <input type="text" id="symptomInput" class="input-pill" style="margin:0; text-align:left;" placeholder="Describe tus síntomas o dudas...">
+                <button onclick="analyzeSymptoms()" style="background:#508ca4; color:white; border:none; border-radius:50px; padding:0 20px; font-weight:bold; cursor:pointer;">Enviar</button>
+            </div>
+        </div>
 
+        <nav class="bottom-nav">
+            <button onclick="showScreen(8)">🏠</button>
+            <button onclick="showScreen(13)">📅</button>
+            <button onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button onclick="loadProfile()">👤</button>
+        </nav>
+    </section>
+
+    <!-- CALENDARIO -->
+    <section id="screen13" class="screen" style="padding:0;">
+        <header class="top-bar">
+            <button class="icon-btn">☰</button>
+            <h2>CitaCiudadana</h2>
+            <div class="profile-icon-top">👤</div>
+        </header>
+
+        <div class="content-area" style="padding:70px 20px 80px;">
+            <h2 style="font-size:20px; font-weight:normal;">CALENDARIO</h2>
+            <div class="pill-label" style="background:white; border:1px solid #ccc; font-size:14px; margin-bottom:20px; color:#333;">CITAS AGENDADAS</div>
+            
+            <div class="calendar-widget" style="min-height:200px;">
+                <p style="text-align:center; font-weight:bold; color:#777;">OCTOBER 2025</p>
+                <div style="font-size:24px; text-align:center; margin-top:50px; color:#ccc;">📅</div>
+            </div>
+            
+            <div class="calendar-widget" style="min-height:200px;">
+                <p style="text-align:center; font-weight:bold; color:#777;">NOVEMBER 2025</p>
+                <div style="font-size:24px; text-align:center; margin-top:50px; color:#ccc;">📅</div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button onclick="showScreen(8)">🏠</button>
+            <button class="active" onclick="showScreen(13)">📅</button>
+            <button onclick="showScreen(10)">🔍</button>
+            <button onclick="showScreen(8)">📋</button>
+            <button onclick="loadProfile()">👤</button>
+        </nav>
+    </section>
+
+    <div id="toast" style="position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:50px; font-size:12px; display:none; z-index:9999;"></div>
+
+</div>
+
+<script src="js/app.js"></script>
+<script>
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg;
+        t.style.display = "block";
+        setTimeout(() => t.style.display = "none", 2500);
+    }
+</script>
 </body>
 </html>

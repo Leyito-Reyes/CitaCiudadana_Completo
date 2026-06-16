@@ -52,9 +52,11 @@ function handleRegister(userData) {
   db.users[normalizedEmail] = {
     name,
     email: normalizedEmail,
-    password, // Guardamos la contraseña (para este prototipo de forma directa)
+    password, 
     phone: "",
-    address: "",
+    age: "",
+    curp: "",
+    social: "",
     profileImage: "https://via.placeholder.com/150",
   };
 
@@ -84,7 +86,7 @@ function handleLogin(credentials) {
 
 // 3. Actualizar Perfil
 function handleUpdateProfile(profileData) {
-  const { email, name, phone, address, profileImage } = profileData;
+  const { email, name, phone, age, curp, social, profileImage } = profileData;
   if (!email) {
     return { success: false, message: "El correo de usuario es requerido" };
   }
@@ -99,7 +101,9 @@ function handleUpdateProfile(profileData) {
 
   if (name !== undefined) user.name = name;
   if (phone !== undefined) user.phone = phone;
-  if (address !== undefined) user.address = address;
+  if (age !== undefined) user.age = age;
+  if (curp !== undefined) user.curp = curp;
+  if (social !== undefined) user.social = social;
   if (profileImage !== undefined) user.profileImage = profileImage;
 
   db.users[normalizedEmail] = user;
@@ -174,6 +178,31 @@ function handleAnalyzeSymptoms(symptomData) {
   return { success: true, response };
 }
 
+// 7. Autenticación con Google
+function handleGoogleLogin(userData) {
+  const { email, name, googleId } = userData;
+  if (!email) return { success: false, message: "Correo de Google requerido" };
+
+  const db = readDb();
+  const normalizedEmail = email.toLowerCase().trim();
+
+  if (!db.users[normalizedEmail]) {
+    db.users[normalizedEmail] = {
+      name: name || "Usuario de Google",
+      email: normalizedEmail,
+      password: "",
+      phone: "",
+      address: "",
+      profileImage: "https://via.placeholder.com/150",
+      googleId: googleId
+    };
+    writeDb(db);
+  }
+
+  const { password: _, ...userWithoutPassword } = db.users[normalizedEmail];
+  return { success: true, user: userWithoutPassword };
+}
+
 module.exports = {
   handleRegister,
   handleLogin,
@@ -181,4 +210,5 @@ module.exports = {
   handleGetAppointments,
   handleCreateAppointment,
   handleAnalyzeSymptoms,
+  handleGoogleLogin,
 };
