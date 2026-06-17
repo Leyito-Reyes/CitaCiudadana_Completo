@@ -1,0 +1,6 @@
+{
+  "appId": "com.citaciudadana.app",
+  "appName": "CitaCiudadana",
+  "webDir": ".",
+  "bundledWebRuntime": false
+}
